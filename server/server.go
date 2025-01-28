@@ -5,164 +5,157 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/base64"
-	"encoding/json"
+	"fmt"
+	"log"
 	"net"
-	"quic-tunnel/logger"
-	"quic-tunnel/models"
+	"os"
+	"quic-tunnel/messaging"
+	"strings"
 	"sync"
 	"time"
 
 	"github.com/quic-go/quic-go"
 )
 
-// Server configuration
 var (
-	logd                = logger.Loger
-	upstreamConnections = make(map[string]*net.TCPConn) // Persistent TCP connections
-	mu                  sync.Mutex                      // Protects upstreamConnections map
-	ClientConn          *models.ClientConn
-	Addresses           *models.Addresses
-	Upstreams           *[]models.Upstream
+	API_KEY = "supersecretapikey"
+	iface   = make(map[string]net.Conn)
 )
 
-// Startserver starts the QUIC tunnel server with multiple upstreams.
-func Startserver(address, port string, upstreams []models.Upstream) {
+// var clientPorts = map[string]int{
+// 	"port1": 8081,
+// 	"port2": 8082,
+// } // Client listens here
 
-	quicAddr := address + ":" + port
+var conf = messaging.ParseClientConfigs(API_KEY, "localhost:8084/tcp,localhost:8085/tcp")
 
-	// configure the global pointers
-	Addresses = &models.Addresses{
-		Upstream: upstreams,
+// ** QUIC Server: Accepts Client Connections and Relays to Upstream TCP **
+func Server(ctx context.Context, wg *sync.WaitGroup) {
+
+	// sets the API key variable globally.
+	os.Setenv("API_KEY", API_KEY)
+
+	defer wg.Done()
+	quicConfig := &quic.Config{
+		MaxIdleTimeout:  45 * time.Second,
+		KeepAlivePeriod: 30 * time.Second,
 	}
-	Upstreams = &upstreams
 
-	// Perform an initial health check for all upstreams
-	if !healthCheckAll(upstreams) {
-		logd.Fatal("❌ Health check failed! Unable to connect to one or more upstreams")
+	listener, err := quic.ListenAddr("localhost:4241", generateTLSConfig(), quicConfig)
+	if err != nil {
+		log.Fatalf("Failed to start QUIC server: %v", err)
 	}
+	fmt.Println("Server listening on port 4242...")
 
-	logd.Info("✅ Initial health check successful! Forwarding traffic to upstreams.")
-
-	// Start periodic health check
 	go func() {
-		for {
-			time.Sleep(30 * time.Second)
-			if !healthCheckAll(upstreams) {
-				logd.Fatal("❌ An UpStream is UnHealthy! Lost connection to one or more upstreams!")
-			}
-		}
+		<-ctx.Done()
+		fmt.Println("Shutting down server...")
+		listener.Close()
 	}()
 
-	// Start QUIC listener
-	listener, err := quic.ListenAddr(quicAddr, generateTLSConfig(), nil)
-	if err != nil {
-		logd.Fatal("❌ QUIC Listen failed: %v", err)
+	// the problem here is with the TCP upstream handler, it needs to be moved outside the
+	// context of the stream and quic handlers.
+	// we take care of this by mapping *net.Conn to remotehost
+	// based on this mapping we then have streamID and remotehost.
+	// we use remote host as the common value to map between the two.
+
+	wg.Add(len(conf))
+
+	for _, host := range conf {
+
+		tcpReady := make(chan struct{})
+		go func(host messaging.QuicMessage) {
+			tcpConn := messaging.MonitorTCPHealth(ctx, host)
+			if tcpConn == nil {
+				close(tcpReady)
+				return
+			}
+			iface[host.RemoteHost] = tcpConn
+			defer tcpConn.Close()
+			close(tcpReady)
+		}(host)
+
+		go func(host messaging.QuicMessage) {
+			<-tcpReady
+			defer wg.Done()
+			messaging.QuicListenerHandler(ctx, *listener, host)
+		}(host)
 	}
-	logd.Info("🚀 QUIC Server listening on %s", quicAddr)
-
-	// Create the quic session.
-	session, err := listener.Accept(context.Background())
-	if err != nil {
-		logd.Info("❌ Failed to accept QUIC session: %v", err)
-	}
-
-	logd.Info("🔗 New QUIC session established from: %s", session.RemoteAddr().String())
-
-	// Start the initial handshake stream
-	stream, err := session.AcceptStream(context.Background())
-	if err != nil {
-		logd.Fatal("❌ Failed to accept QUIC stream: %s", err)
-		return
-	}
-	logd.Info("🎉 New QUIC stream accepted!")
-
-	ClientConn = &models.ClientConn{
-		Stream:  stream,
-		Session: session,
-	}
-
-	// Reads the initial handshake message.
-	buf := make([]byte, 1024)
-	n, err := stream.Read(buf)
-	if err != nil {
-		logd.Fatal("❌ QUIC Read error.")
-		return
-	}
-
-	message := string(buf[:n])
-	if message == "quic-clients\n" {
-		_, err = handleclients()
-		if err != nil {
-			panic(err)
-		}
-		UpStreamDatagrams()
-	}
-
 }
 
-func handleclients() (bool, error) {
-	// wrap in goroutine with sleep to wait for keepalives so session doesn't die.
-	logd.Info("✅ Received Clients list request.")
+var certPEMBase64 = `
+	LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJpakNDQVR5Z0F3SUJBZ0lVUVgvWVBSOGh1
+	QXB6aDhMVXRoV1Nvb3pTZ2lVd0JRWURLMlZ3TUJJeEVEQU8KQmdOVkJBTU1CMUZWU1VNdFEwRXdI
+	aGNOTWpVd01USTJNRGN3T0RJeFdoY05NelV3TVRJME1EY3dPREl4V2pBVwpNUlF3RWdZRFZRUURE
+	QXR4ZFdsakxYTmxjblpsY2pBcU1BVUdBeXRsY0FNaEFLRUQ1VWJIaXBPbUYvQmJ1N1RGCjVWWjY0
+	Wk5lRUtLMWdHUEdsaGxWcER5Nm80R2ZNSUdjTUF3R0ExVWRFd0VCL3dRQ01BQXdKd1lEVlIwUkJD
+	QXcKSG9JTGNYVnBZeTF6WlhKMlpYS0NDV3h2WTJGc2FHOXpkSWNFZndBQUFUQU9CZ05WSFE4QkFm
+	OEVCQU1DQjRBdwpFd1lEVlIwbEJBd3dDZ1lJS3dZQkJRVUhBd0V3SFFZRFZSME9CQllFRkdUWXhG
+	R0JzSTVQMjk3aERoMDl4V2g3CnhIVmZNQjhHQTFVZEl3UVlNQmFBRkpMOWZhR3ZRVUtsVXpqNGNu
+	VVMyUzJsQURGQk1BVUdBeXRsY0FOQkFMWEIKYUxZQnlrYXFvN1N3bG1UbTQza0gxN2NLSTZqUVFP
+	VW41THpkREVRanJjcmxpT0xGR1hnelhrMTVaUjhWbCsrYwpqYW5odndqL0VDVTV3bEVLTXdjPQot
+	LS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+	`
 
-	// Marshal JSON response
-	js, err := json.Marshal(Addresses)
-	if err != nil {
-		logd.Fatal("❌ Failed to marshal JSON: %v", err)
-		return false, err
-	}
+var keyPEMBase64 = `
+	LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1DNENBUUF3QlFZREsyVndCQ0lFSURPekUvVk9M
+	bkxYelpheVNDL1Z0OVlnb2MydG0ydlZ3YXNBUGozcU9VT2gKLS0tLS1FTkQgUFJJVkFURSBLRVkt
+	LS0tLQo=
+	`
 
-	// Append a newline to signal the end of the message
-	response := append([]byte("quic-clients: "), js...)
-	response = append(response, '\n')
+var CAPEMBase64 = `
+	LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJTRENCKzZBREFnRUNBaFJmak94dmNiV0pX
+	S2NObDZZbE9NYjR5bTZKU2pBRkJnTXJaWEF3RWpFUU1BNEcKQTFVRUF3d0hVVlZKUXkxRFFUQWVG
+	dzB5TlRBeE1qWXdOekE0TURsYUZ3MHpOVEF4TWpRd056QTRNRGxhTUJJeApFREFPQmdOVkJBTU1C
+	MUZWU1VNdFEwRXdLakFGQmdNclpYQURJUUNjK1ZYSkY3eHVua3plTlRZL0JhSVV0TkQxCmFuTHBN
+	cFh2MUQ0UThPMXFWNk5qTUdFd0hRWURWUjBPQkJZRUZKTDlmYUd2UVVLbFV6ajRjblVTMlMybEFE
+	RkIKTUI4R0ExVWRJd1FZTUJhQUZKTDlmYUd2UVVLbFV6ajRjblVTMlMybEFERkJNQThHQTFVZEV3
+	RUIvd1FGTUFNQgpBZjh3RGdZRFZSMFBBUUgvQkFRREFnRUdNQVVHQXl0bGNBTkJBSko5SllQcW9B
+	bndyL2JEd1QwbkN2Nk9GZWRUCm5seXhIV3h1OEZQK015UzlpeXhlUDFiWHFpdk15blNGd0ltb3ln
+	SG1velRUdlF4QkxvM0xGbzNNZWdjPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+	`
 
-	// Write response
-	_, err = ClientConn.Stream.Write(response)
-	if err != nil {
-		logd.Fatal("❌ QUIC Write error: %v", err)
-		return false, err
-	}
+func stripNewlines(base64s string) string {
 
-	logd.Info("📤 Sent client list response: %s", string(response))
-	return true, nil
+	cleanBase64 := strings.ReplaceAll(base64s, "\t", "")
+	cleanBase64 = strings.TrimSpace(cleanBase64)
+	return cleanBase64
 }
-
-// Base64-encoded certificate and key (output from `base64 -w 0`)
-var certPEMBase64 = `LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJ5akNDQVhDZ0F3SUJBZ0lVVm9kaDdSbStFY2t5TGg0WTFIWFgwOHhMeGxRd0NnWUlLb1pJemowRUF3SXcKRWpFUU1BNEdBMVVFQXd3SFVWVkpReTFEUVRBZUZ3MHlOVEF4TWpReU1EVXdNRFphRncwek5UQXhNakl5TURVdwpNRFphTUJZeEZEQVNCZ05WQkFNTUMzRjFhV010YzJWeWRtVnlNRmt3RXdZSEtvWkl6ajBDQVFZSUtvWkl6ajBECkFRY0RRZ0FFdEtWU3NnNkJ0QWRXMThOdVZicWdXS2dldEdYc1BBZXZSUzlNL3hHMTdacEtWRHF4ZFQzN3FqdWQKUDZidE56cWZ4YVR2QzA2OXg3QTdGWllmcU02OXNhT0JuekNCbkRBTUJnTlZIUk1CQWY4RUFqQUFNQ2NHQTFVZApFUVFnTUI2Q0MzRjFhV010YzJWeWRtVnlnZ2xzYjJOaGJHaHZjM1NIQkg4QUFBRXdEZ1lEVlIwUEFRSC9CQVFECkFnV2dNQk1HQTFVZEpRUU1NQW9HQ0NzR0FRVUZCd01CTUIwR0ExVWREZ1FXQkJTaSs0Tk43cG41TzlndUZncE8Kc1k3ZHRpb3JrakFmQmdOVkhTTUVHREFXZ0JUSUVxcTdWelVKcTQ4SWZjS3ZuNUJoZjdyTGlqQUtCZ2dxaGtqTwpQUVFEQWdOSUFEQkZBaUVBbG9xdWVwQ2V0bFVnS1pHTVJDK3ZoV01LNWhtUnU3WGtCQ1A3NGJKeFhrVUNJRHZ0CjVQakZ4VVd5UXRlQ2k3YnIvN3h2YUMxSmZtNGFaYnc5K3BUKzJ2Q2sKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=` // Replace with your encoded certificate
-var keyPEMBase64 = `LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JR0hBZ0VBTUJNR0J5cUdTTTQ5QWdFR0NDcUdTTTQ5QXdFSEJHMHdhd0lCQVFRZ3J0aW1SdHdZRC9MR2w5RHQKdHUzdjR6NVJHN1k3M1FEY2tISVRlT1Z2dDZpaFJBTkNBQVMwcFZLeURvRzBCMWJYdzI1VnVxQllxQjYwWmV3OApCNjlGTDB6L0ViWHRta3BVT3JGMVBmdXFPNTAvcHUwM09wL0ZwTzhMVHIzSHNEc1ZsaCtvenIyeAotLS0tLUVORCBQUklWQVRFIEtFWS0tLS0tCg==`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          // Replace with your encoded private key
-var CAPEMBase64 = `LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJpRENDQVMrZ0F3SUJBZ0lVQVV4bkplMmxNK1pkeFM0Um01MnNML0lCdGZNd0NnWUlLb1pJemowRUF3SXcKRWpFUU1BNEdBMVVFQXd3SFVWVkpReTFEUVRBZUZ3MHlOVEF4TWpReU1EUTVOVE5hRncwek5UQXhNakl5TURRNQpOVE5hTUJJeEVEQU9CZ05WQkFNTUIxRlZTVU10UTBFd1dUQVRCZ2NxaGtqT1BRSUJCZ2dxaGtqT1BRTUJCd05DCkFBUVRNUDErZEEzRGtIcUZvV0VGUlA5SkszWlZhQ0paMitTMkFuN01rOVlRdHc5ZGYvblZsQnhZQ3c3UXNvZTYKVmJYQkRNZk80V3ZaaXpwYStXdmFPZ3g5bzJNd1lUQWRCZ05WSFE0RUZnUVV5QktxdTFjMUNhdVBDSDNDcjUrUQpZWCs2eTRvd0h3WURWUjBqQkJnd0ZvQVV5QktxdTFjMUNhdVBDSDNDcjUrUVlYKzZ5NG93RHdZRFZSMFRBUUgvCkJBVXdBd0VCL3pBT0JnTlZIUThCQWY4RUJBTUNBUVl3Q2dZSUtvWkl6ajBFQXdJRFJ3QXdSQUlnYjBTUWdWWVQKSjJQamthT1QzdnRIMGs0NFVObUxkVnJybW9hNzhtb2UwNXdDSUFkcC9Qanl2Z0lDS3VFZS9DaUJQZnFJZ1ZHbwptZCtKZnlLeFBYVVdGRWJSCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K`
 
 // Decode Base64 cert and key, then load into TLS config
 func generateTLSConfig() *tls.Config {
-	certPEM, err := base64.StdEncoding.DecodeString(certPEMBase64)
+
+	certPEM, err := base64.StdEncoding.DecodeString(stripNewlines(certPEMBase64))
 	if err != nil {
-		logd.Fatal("Failed to decode cert: %v", err)
+		log.Fatalf("Failed to decode Base64 certificate: %v", err)
 	}
 
-	keyPEM, err := base64.StdEncoding.DecodeString(keyPEMBase64)
+	keyPEM, err := base64.StdEncoding.DecodeString(stripNewlines(keyPEMBase64))
 	if err != nil {
-		logd.Fatal("Failed to decode key: %v", err)
+		fmt.Printf("Failed to decode key: %v", err)
 	}
 
-	caPEM, err := base64.StdEncoding.DecodeString(CAPEMBase64)
+	caPEM, err := base64.StdEncoding.DecodeString(stripNewlines(CAPEMBase64))
 	if err != nil {
-		logd.Fatal("Failed to decode key: %v", err)
+		fmt.Printf("Failed to decode ca cert: %v", err)
 	}
 
 	caPool := x509.NewCertPool()
 	if !caPool.AppendCertsFromPEM(caPEM) {
-		logd.Fatal("Failed to append CA certificate")
+		fmt.Printf("Failed to append CA certificate")
 	}
 
 	// Load server certificate and key
 	certs, err := tls.X509KeyPair(certPEM, keyPEM)
 	if err != nil {
-		logd.Fatal("Failed to load X509 key pair: %v", err)
+		fmt.Printf("Failed to load X509 key pair: %v", err)
 	}
 
 	return &tls.Config{
-		Certificates: []tls.Certificate{certs},
-		ClientCAs:    caPool,                         // Trust client certs signed by CA
-		ClientAuth:   tls.RequireAndVerifyClientCert, // Enforce mTLS
-		NextProtos:   []string{"quic-tunnel"},
+		Certificates:       []tls.Certificate{certs},
+		RootCAs:            caPool, // Trust server signed by CA
+		NextProtos:         []string{"quic-tunnel"},
+		InsecureSkipVerify: false, // Don't skip verification (mTLS required)
 	}
+
 }
