@@ -27,8 +27,9 @@ func main() {
 		cancel()
 	}()
 
-	go server.Server(ctx, &wg)
+	//go server.Server(ctx, &wg)
 	go client.Client(ctx, &wg)
+	go server.Server(ctx, &wg)
 
 	wg.Wait() // Wait for the server to exit before main exits
 

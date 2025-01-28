@@ -69,60 +69,78 @@ func ReadJSON(stream quic.Stream, apikey string) (QuicMessage, error) {
 	return msg, nil
 }
 
-func HandleStream(ctx context.Context, conn quic.Connection, i int, host QuicMessage, rhost string) {
-	for {
-		select {
-		case <-ctx.Done():
-			fmt.Println("Stopping stream handler.")
+// UpStream is TCP -> QUIC
+func HandleUpStream(ctx context.Context, conn quic.Connection, host QuicMessage, rhost string, data []byte) {
+
+	stream, err := conn.OpenStreamSync(ctx)
+	if err != nil {
+		if ctx.Err() != nil {
+			fmt.Println("Connection shutting down.")
 			return
-		default:
-			// Open a new stream
-			stream, err := conn.OpenStreamSync(ctx)
-			if err != nil {
-				if ctx.Err() != nil {
-					fmt.Println("Connection shutting down.")
-					return
-				}
-				log.Printf("Error opening stream: %v", err)
-				time.Sleep(2 * time.Second) // Backoff before retrying
-				continue
-			}
-
-			// Prepare message
-			n := QuicMessage{
-				ApiKey:     host.ApiKey,
-				RemoteHost: host.RemoteHost,
-				Protocol:   host.Protocol,
-				ClientHost: rhost,
-				StreamID:   stream.StreamID(),
-			}
-			fmt.Printf("Values: %+v\n", n)
-
-			upstreams, err := n.Marshal()
-			if err != nil {
-				log.Printf("Error marshalling upstream data: %v", err)
-				stream.Close()
-				return
-			}
-
-			fmt.Printf("Upstreams: %s\n", string(upstreams)) // ✅ Print only after confirming success
-
-			// Send data (pass `n`, not `*n`)
-			err = SendStream(n, stream)
-			if err != nil {
-				log.Printf("Error sending stream: %v", err)
-			}
-			// Read response
-			response := make([]byte, 1024)
-			nBytes, err := stream.Read(response)
-			if err != nil {
-				log.Printf("Error reading response: %v", err)
-				stream.Close()
-				return
-			}
-
-			fmt.Printf("Received response: %s\n", string(response[:nBytes]))
-
 		}
+		log.Printf("Error opening stream: %v", err)
+		time.Sleep(2 * time.Second) // Backoff before retrying
+	}
+
+	// Prepare message
+	n := QuicMessage{
+		ApiKey:     host.ApiKey,
+		RemoteHost: rhost,
+		Protocol:   host.Protocol,
+		ClientHost: rhost,
+		StreamID:   stream.StreamID(),
+		Data:       data,
+	}
+	fmt.Printf("Values: %+v\n", n)
+
+	upstreams, err := n.Marshal()
+	if err != nil {
+		log.Printf("Error marshalling upstream data: %v", err)
+		stream.Close()
+		return
+	}
+
+	fmt.Printf("Upstreams: %s\n", string(upstreams)) // ✅ Print only after confirming success
+
+	// Send data (pass `n`, not `*n`)
+	err = SendStream(n, stream)
+	if err != nil {
+		log.Printf("Error sending stream: %v", err)
 	}
 }
+
+// Downstream is QUIC -> TCP
+// func HandleDownStream(ctx context.Context, conn quic.Connection, host QuicMessage, rhost string) {
+// 	for {
+// 		select {
+// 		case <-ctx.Done():
+// 			fmt.Println("Stopping QUIC → TCP handler.")
+// 			return
+// 		default:
+// 			// Accept incoming QUIC stream
+// 			stream, err := conn.AcceptStream(ctx)
+// 			if err != nil {
+// 				if ctx.Err() != nil {
+// 					fmt.Println("Shutting down QUIC → TCP handler.")
+// 					return
+// 				}
+// 				log.Printf("Error accepting QUIC stream: %v", err)
+// 				continue
+// 			}
+
+// 			// Dial a TCP connection to the remote host
+// 			tcpConn, err := net.Dial("tcp", rhost)
+// 			if err != nil {
+// 				log.Printf("Failed to connect to remote TCP server (%s): %v", rhost, err)
+// 				stream.Close()
+// 				continue
+// 			}
+
+// 			fmt.Printf("Connected QUIC stream to TCP server (%s)\n", rhost)
+
+// 			// Start bi-directional proxying between QUIC and TCP
+// 			go proxyQUICToTCP(ctx, stream, tcpConn) // QUIC → TCP
+// 			// go proxyTCPToQUIC(ctx, tcpConn, stream) // TCP → QUIC
+// 		}
+// 	}
+// }

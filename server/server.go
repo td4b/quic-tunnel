@@ -7,6 +7,8 @@ import (
 	"encoding/base64"
 	"fmt"
 	"log"
+	"net"
+	"os"
 	"quic-tunnel/messaging"
 	"strings"
 	"sync"
@@ -16,9 +18,8 @@ import (
 )
 
 var (
-	tlsconf = generateTLSConfig()
-	cert    = tlsconf.Certificates[0]
 	API_KEY = "supersecretapikey"
+	iface   = make(map[string]net.Conn)
 )
 
 // var clientPorts = map[string]int{
@@ -26,8 +27,13 @@ var (
 // 	"port2": 8082,
 // } // Client listens here
 
+var conf = messaging.ParseClientConfigs(API_KEY, "localhost:8084/tcp,localhost:8085/tcp")
+
 // ** QUIC Server: Accepts Client Connections and Relays to Upstream TCP **
 func Server(ctx context.Context, wg *sync.WaitGroup) {
+
+	// sets the API key variable globally.
+	os.Setenv("API_KEY", API_KEY)
 
 	defer wg.Done()
 	quicConfig := &quic.Config{
@@ -35,7 +41,7 @@ func Server(ctx context.Context, wg *sync.WaitGroup) {
 		KeepAlivePeriod: 30 * time.Second,
 	}
 
-	listener, err := quic.ListenAddr("localhost:4242", generateTLSConfig(), quicConfig)
+	listener, err := quic.ListenAddr("localhost:4241", generateTLSConfig(), quicConfig)
 	if err != nil {
 		log.Fatalf("Failed to start QUIC server: %v", err)
 	}
@@ -47,60 +53,33 @@ func Server(ctx context.Context, wg *sync.WaitGroup) {
 		listener.Close()
 	}()
 
-	for {
-		select {
-		case <-ctx.Done():
-			fmt.Println("Server stopped accepting new connections.")
-			return
-		default:
-			conn, err := listener.Accept(ctx)
-			if err != nil {
-				if ctx.Err() != nil {
-					fmt.Println("Server shutting down gracefully.")
-					return
-				}
-				log.Printf("Error accepting connection: %v", err)
-				continue
+	// the problem here is with the TCP upstream handler, it needs to be moved outside the
+	// context of the stream and quic handlers.
+	// we take care of this by mapping *net.Conn to remotehost
+	// based on this mapping we then have streamID and remotehost.
+	// we use remote host as the common value to map between the two.
+
+	wg.Add(len(conf))
+
+	for _, host := range conf {
+
+		tcpReady := make(chan struct{})
+		go func(host messaging.QuicMessage) {
+			tcpConn := messaging.MonitorTCPHealth(ctx, host)
+			if tcpConn == nil {
+				close(tcpReady)
+				return
 			}
+			iface[host.RemoteHost] = tcpConn
+			defer tcpConn.Close()
+			close(tcpReady)
+		}(host)
 
-			go handleConnection(ctx, conn)
-		}
-	}
-
-}
-
-func handleConnection(ctx context.Context, conn quic.Connection) {
-	for {
-		select {
-		case <-ctx.Done():
-			fmt.Println("Stopping connection handler.")
-			return
-		default:
-			stream, err := conn.AcceptStream(ctx)
-			if err != nil {
-				if ctx.Err() != nil {
-					fmt.Println("Connection shutting down.")
-					return
-				}
-				log.Printf("Error accepting stream: %v", err)
-				continue
-			}
-
-			go handleStream(ctx, stream)
-		}
-	}
-}
-
-func handleStream(ctx context.Context, stream quic.Stream) {
-	select {
-	case <-ctx.Done():
-		fmt.Println("Stopping stream processing.")
-		return
-	default:
-		_, err := messaging.ReadJSON(stream, API_KEY)
-		if err != nil {
-			log.Printf("Error reading JSON: %v", err)
-		}
+		go func(host messaging.QuicMessage) {
+			<-tcpReady
+			defer wg.Done()
+			messaging.QuicListenerHandler(ctx, *listener, host)
+		}(host)
 	}
 }
 

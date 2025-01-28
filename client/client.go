@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	qmsg "quic-tunnel/messaging"
+	"quic-tunnel/messaging"
 
 	"github.com/quic-go/quic-go"
 )
@@ -20,9 +20,9 @@ var (
 	API_KEY = "supersecretapikey"
 
 	// The client hosts
-	clientconf = qmsg.ParseClientConfigs(API_KEY, "localhost:8080/tcp,localhost:8081/tcp")
+	clientconf = messaging.ParseClientConfigs(API_KEY, "localhost:8080/tcp,localhost:8081/tcp")
 	// The upstream hosts to connect to
-	remoteconf = qmsg.ParseClientConfigs(API_KEY, "localhost:8084/tcp,localhost:8085/tcp")
+	remoteconf = messaging.ParseClientConfigs(API_KEY, "localhost:8084/tcp,localhost:8085/tcp")
 )
 
 // ** Client: Connects to QUIC Server and Listens on TCP Ports **
@@ -34,7 +34,7 @@ func Client(ctx context.Context, wg *sync.WaitGroup) {
 		KeepAlivePeriod: 30 * time.Second,
 	}
 
-	conn, err := quic.DialAddr(ctx, "localhost:4242", tlsconf, quicConfig)
+	conn, err := quic.DialAddr(ctx, "localhost:4241", tlsconf, quicConfig)
 	if err != nil {
 		log.Fatalf("Failed to connect to QUIC server: %v", err)
 	}
@@ -53,11 +53,14 @@ func Client(ctx context.Context, wg *sync.WaitGroup) {
 			fmt.Println("Client stopping new connections.")
 			return
 		default:
-			go func(i int, lhost qmsg.QuicMessage) {
-				defer wg.Done() // Ensure counter is decremented
-				rhost := remoteconf[i].ClientHost
-				qmsg.HandleStream(ctx, conn, i, lhost, rhost)
-			}(i, host)
+			// replace with TCP handler.
+
+			//log.Printf("Added Remote: %+v Local: %+v", host, remoteconf[i].ClientHost)
+			go func() {
+				defer wg.Done()
+				log.Printf("Added Remote: %+v Local: %+v", host, remoteconf[i].ClientHost)
+				messaging.TCPHandler(ctx, host, remoteconf[i].ClientHost, conn)
+			}()
 		}
 	}
 
