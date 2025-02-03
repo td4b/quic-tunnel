@@ -1,0 +1,1 @@
+{"virtualbox":{"/home/ubuntu/.":{"type":"virtualbox","guestpath":"/home/ubuntu/.","hostpath":"C:/Users/edwin/Desktop/DevMachine/client","disabled":false,"__vagrantfile":true},"/vagrant":{"guestpath":"/vagrant","hostpath":"C:/Users/edwin/Desktop/DevMachine/client","disabled":false,"__vagrantfile":true}}}

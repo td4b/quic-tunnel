@@ -1,0 +1,30 @@
+{
+  "ActiveTargetSystem": "127.0.0.1",
+  "DevContainersInfoBarHidden": true,
+  "MRUPresetsPerTargetSystem": {
+    "Local Machine": {
+      "configure": "x64-debug"
+    }
+  },
+  "OutputFoldersPerTargetSystem": {
+    "Local Machine": [
+      "out\\build\\x64-debug",
+      "out\\install\\x64-debug",
+      "out\\build\\x64-release",
+      "out\\install\\x64-release",
+      "out\\build\\x86-debug",
+      "out\\install\\x86-debug",
+      "out\\build\\x86-release",
+      "out\\install\\x86-release"
+    ],
+    "127.0.0.1": [
+      "out\\-420678137\\build\\linux-debug",
+      "out\\-420678137\\install\\linux-debug"
+    ]
+  },
+  "ExpandedNodes": [
+    ""
+  ],
+  "SelectedNode": "\\client.c",
+  "PreviewInSolutionExplorer": false
+}

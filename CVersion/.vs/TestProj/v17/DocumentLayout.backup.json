@@ -1,0 +1,256 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\server.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:server.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\client.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:client.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\edwin\\AppData\\Local\\Microsoft\\Linux\\HeaderCache\\1.0\\-420678137\\usr\\include\\stdlib.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\tun.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:tun.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\client.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:client.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\tun.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:tun.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\main.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:main.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:2:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\CMakeLists.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:2:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:CMakeLists.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\shared.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:shared.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\CMakePresets.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:CMakePresets.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\shared.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:shared.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\server.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:server.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\server\\ServerProj\\Vagrantfile||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:1:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\CMakeLists.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:1:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:CMakeLists.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|CMake Overview Pages||{B1CAA5B0-FEB1-4350-8AB9-F895876842F2}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 5,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "stdlib.h",
+              "DocumentMoniker": "C:\\Users\\edwin\\AppData\\Local\\Microsoft\\Linux\\HeaderCache\\1.0\\-420678137\\usr\\include\\stdlib.h",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\AppData\\Local\\Microsoft\\Linux\\HeaderCache\\1.0\\-420678137\\usr\\include\\stdlib.h",
+              "ToolTip": "C:\\Users\\edwin\\AppData\\Local\\Microsoft\\Linux\\HeaderCache\\1.0\\-420678137\\usr\\include\\stdlib.h",
+              "RelativeToolTip": "..\\..\\..\\..\\AppData\\Local\\Microsoft\\Linux\\HeaderCache\\1.0\\-420678137\\usr\\include\\stdlib.h",
+              "ViewState": "AgIAABoCAAAAAAAAAAArwCoCAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-02-03T05:34:20.483Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "tun.c",
+              "DocumentMoniker": "C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\tun.c",
+              "RelativeDocumentMoniker": "tun.c",
+              "ToolTip": "C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\tun.c",
+              "RelativeToolTip": "tun.c",
+              "ViewState": "AgIAAMQAAAAAAAAAAAAAANEAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-02-01T23:05:00.116Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "server.h",
+              "DocumentMoniker": "C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\server.h",
+              "RelativeDocumentMoniker": "server.h",
+              "ToolTip": "C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\server.h",
+              "RelativeToolTip": "server.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-02-01T07:25:11.051Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "shared.h",
+              "DocumentMoniker": "C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\shared.h",
+              "RelativeDocumentMoniker": "shared.h",
+              "ToolTip": "C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\shared.h",
+              "RelativeToolTip": "shared.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-02-01T06:49:41.052Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "client.c",
+              "DocumentMoniker": "C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\client.c",
+              "RelativeDocumentMoniker": "client.c",
+              "ToolTip": "C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\client.c",
+              "RelativeToolTip": "client.c",
+              "ViewState": "AgIAABcBAAAAAAAAAAAAAC8BAABEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-02-01T06:45:47.75Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "server.c",
+              "DocumentMoniker": "C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\server.c",
+              "RelativeDocumentMoniker": "server.c",
+              "ToolTip": "C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\server.c",
+              "RelativeToolTip": "server.c",
+              "ViewState": "AgIAABMBAAAAAAAAAAAAACEBAABEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-02-01T06:44:19.167Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "CMakeLists.txt",
+              "DocumentMoniker": "C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\CMakeLists.txt",
+              "RelativeDocumentMoniker": "CMakeLists.txt",
+              "ToolTip": "C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\CMakeLists.txt",
+              "RelativeToolTip": "CMakeLists.txt",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2025-02-01T06:43:19.937Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "tun.h",
+              "DocumentMoniker": "C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\tun.h",
+              "RelativeDocumentMoniker": "tun.h",
+              "ToolTip": "C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\tun.h",
+              "RelativeToolTip": "tun.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-02-01T23:24:02.284Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "client.h",
+              "DocumentMoniker": "C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\client.h",
+              "RelativeDocumentMoniker": "client.h",
+              "ToolTip": "C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\client.h",
+              "RelativeToolTip": "client.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-02-01T07:28:23.098Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "main.c",
+              "DocumentMoniker": "C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\main.c",
+              "RelativeDocumentMoniker": "main.c",
+              "ToolTip": "C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\main.c",
+              "RelativeToolTip": "main.c",
+              "ViewState": "AgIAAD8AAAAAAAAAAAAAAE0AAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-02-01T07:25:37.513Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "shared.c",
+              "DocumentMoniker": "C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\shared.c",
+              "RelativeDocumentMoniker": "shared.c",
+              "ToolTip": "C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\shared.c",
+              "RelativeToolTip": "shared.c",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-02-01T07:13:27.982Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "CMakePresets.json",
+              "DocumentMoniker": "C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\CMakePresets.json",
+              "RelativeDocumentMoniker": "CMakePresets.json",
+              "ToolTip": "C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\CMakePresets.json",
+              "RelativeToolTip": "CMakePresets.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-02-01T06:43:35.379Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Vagrantfile",
+              "DocumentMoniker": "C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\server\\ServerProj\\Vagrantfile",
+              "RelativeDocumentMoniker": "..\\server\\ServerProj\\Vagrantfile",
+              "ToolTip": "C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\server\\ServerProj\\Vagrantfile",
+              "RelativeToolTip": "..\\server\\ServerProj\\Vagrantfile",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-02-02T06:28:59.808Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "CMake Overview Pages",
+              "DocumentMoniker": "CMake Overview Pages",
+              "ToolTip": "CMake Overview Pages",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-02-01T06:43:19.154Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "CMakeLists.txt",
+              "DocumentMoniker": "C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\CMakeLists.txt",
+              "RelativeDocumentMoniker": "CMakeLists.txt",
+              "ToolTip": "C:\\Users\\edwin\\Desktop\\DevMachine\\CVersion\\TestProj\\CMakeLists.txt",
+              "RelativeToolTip": "CMakeLists.txt",
+              "ViewState": "AgIAABYAAAAAAAAAAABBwCIAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2025-02-01T07:16:50.541Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
