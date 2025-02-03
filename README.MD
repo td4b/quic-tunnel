@@ -1,4 +1,15 @@
 
+Vagrant on WLS.
+
+```bash
+vagrant plugin install vagrant-qemu
+vagrant up --provider qemu-kvm
+sudo dnf install qemu-kvm libvirt libguestfs-tools virt-install rsync
+sudo systemctl enable --now libvirtd
+
+export VAGRANT_DEFAULT_PROVIDER=docker
+```
+
 Generate CA.
 
 ```bash
