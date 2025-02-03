@@ -1,0 +1,25 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/jammy64"  # Ubuntu 22.04 LTS
+  
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "2048"  # Allocate 2GB RAM
+    vb.cpus = 2         # Use 2 CPU cores
+  end
+
+  # Ensure the synced folder works correctly on Windows
+  #config.vm.synced_folder ".", "/vagrant", disabled: true  # Disable default sync
+  config.vm.synced_folder "C:\\Users\\edwin\\Desktop\\quic-tunnel", "/home/ubuntu/.", type: "virtualbox"
+  config.vm.network "public_network", bridge: "enp0s3"
+
+  # Optional: Provisioning inside the VM
+  config.vm.provision "shell", inline: <<-SHELL
+    echo "Installing Build tools."
+    sudo apt install -y net-tools
+    cd /usr/local
+    sudo wget https://go.dev/dl/go1.23.5.linux-amd64.tar.gz
+    sudo tar -xvf go1.23.5.linux-amd64.tar.gz 
+    sudo rm -rf go1.23.5.linux-amd64.tar.gz
+    echo 'export PATH="$PATH:/usr/local/go/bin"' >> ~/.bashrc
+    echo 'export GOROOT="/usr/local/go"' >> ~/.bashrc
+  SHELL
+end

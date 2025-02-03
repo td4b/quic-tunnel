@@ -1,3 +1,16 @@
+# quic-tunnel
+
+A simple go program that creates a networking tunnel used to route traffic between the client and the server.
+
+# Debug mode.
+
+You can enable debug mode to view the TCP payloads received in the tunnel. Alternativley you can take a packet capture from one of the tunnel interfaces the program generates.
+
+By default the debug logging is disabled to reduce round trip time and latency as the call is blocking.
+
+# Generating mTLs Certificates
+
+How to generate the MTLs Certificates used for authentication.
 
 Generate CA.
 
