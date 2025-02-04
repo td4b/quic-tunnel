@@ -61,14 +61,15 @@ func main() {
 
 	// Add flags for server command
 	servCmd.Flags().String("server", "", "Server address (e.g., localhost or 0.0.0.0)")
-	servCmd.Flags().String("port", "4368", "Port number")
+	servCmd.Flags().String("port", "4222", "Port number")
 
 	// Add flags for client command
-	clientCmd.Flags().String("server", "", "Server address (e.g., localhost or 0.0.0.0)")
-	clientCmd.Flags().String("port", "4368", "Port number")
+	clientCmd.Flags().String("server", "", "Remote Server address.")
+	clientCmd.Flags().String("port", "4222", "Port number")
 
-	// Mark --server and --upstreams as required for server
+	// Mark --server and --port required for server
 	_ = servCmd.MarkFlagRequired("server")
+	_ = servCmd.MarkFlagRequired("port")
 
 	// Mark --server and --port as required for client
 	_ = clientCmd.MarkFlagRequired("server")
