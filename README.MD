@@ -1,5 +1,7 @@
 # quic-tunnel
 
+![QUIC-Tunnel Logo](./logo/quic-tunnel.png)
+
 A simple go program that creates a networking tunnel used to route traffic between the client and the server.
 
 # Routing
