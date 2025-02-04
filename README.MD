@@ -1,6 +1,6 @@
 # quic-tunnel
 
-![QUIC-Tunnel Logo](./logo/quic-tunnel.png)
+<img src="https://github.com/td4b/quic-tunnel/blob/main/logo/quic-tunnel.png" alt="QUIC-Tunnel Logo" width="50%">
 
 A simple go program that creates a networking tunnel used to route traffic between the client and the server.
 
