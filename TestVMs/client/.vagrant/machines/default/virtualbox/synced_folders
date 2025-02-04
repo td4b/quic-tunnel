@@ -1,1 +1,0 @@
-{"virtualbox":{"/home/ubuntu/.":{"type":"virtualbox","guestpath":"/home/ubuntu/.","hostpath":"C:/Users/edwin/Desktop/quic-tunnel","disabled":false,"__vagrantfile":true},"/vagrant":{"guestpath":"/vagrant","hostpath":"C:/Users/edwin/Desktop/quic-tunnel/TestVMs/client","disabled":false,"__vagrantfile":true}}}
