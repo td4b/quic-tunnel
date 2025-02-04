@@ -154,7 +154,9 @@ func configureTun1(iface, ip string) {
 		log.Fatalf("Failed to configure TUN: %v", err)
 	}
 
-	// Add a default route via TUN interface
+	// On the server side, we do not need to use a default route
+	// as we use the primary NICs default gateway.
+
 	// cmd = fmt.Sprintf("ip route add default via 10.10.10.9 dev tun0")
 	// err = exec.Command("sh", "-c", cmd).Run()
 	// if err != nil {

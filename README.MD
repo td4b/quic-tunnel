@@ -2,6 +2,12 @@
 
 A simple go program that creates a networking tunnel used to route traffic between the client and the server.
 
+# Routing
+
+You may have to add NAT rules or remove some default routes if working inside a bridged VM environment. Since the server side of the tunnel is used as the gateway.
+
+Additional ip tables, DNAT and SNAT configuration rules can be added to the client.go or server.go configuration settings to support your routing needs.
+
 # Debug mode.
 
 You can enable debug mode to view the TCP payloads received in the tunnel. Alternativley you can take a packet capture from one of the tunnel interfaces the program generates.
